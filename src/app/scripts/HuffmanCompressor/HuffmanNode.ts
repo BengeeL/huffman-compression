@@ -1,13 +1,18 @@
 export class HuffmanNode {
   char: string | null;
   frequency: number;
-  left: HuffmanNode | null;
-  right: HuffmanNode | null;
+  left: HuffmanNode | null = null;
+  right: HuffmanNode | null = null;
 
-  constructor(char: string | null, frequency: number) {
+  constructor(
+    char: string | null,
+    frequency: number,
+    left: HuffmanNode | null = null,
+    right: HuffmanNode | null = null
+  ) {
     this.char = char;
     this.frequency = frequency;
-    this.left = null;
-    this.right = null;
+    this.left = left;
+    this.right = right;
   }
 }

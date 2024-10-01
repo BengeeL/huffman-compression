@@ -1,83 +1,57 @@
 import { HuffmanNode } from "./HuffmanNode";
 
 export class HuffmanTree {
-  root: HuffmanNode | null;
-  prefixCodeTable: Map<string, string>;
+  root: HuffmanNode | null = null;
+  prefixCodeTable: Map<string, string> = new Map();
   extension: string;
 
   constructor(text: string, extension: string) {
-    this.root = null;
-    this.prefixCodeTable = new Map();
     this.extension = extension;
     if (text) {
       this.buildTree(text);
     }
   }
 
-  buildTree(text: string) {
-    // 1 - Get character frequencies
+  private buildTree(text: string) {
     const frequencies = this.getFrequencies(text);
-
-    // 2 - Create nodes for each character
     const nodes = this.createNodes(frequencies);
-
-    // 3 - Build Huffman tree
     this.root = this.buildHuffmanTree(nodes);
-
-    // 4 - Generate prefix codes for each character
     this.generatePrefixCodes(this.root, "");
-    console.log("Prefix Code Table:", this.prefixCodeTable);
   }
 
-  getFrequencies(text: string) {
+  private getFrequencies(text: string): Map<string, number> {
     const frequencies = new Map<string, number>();
-
     for (const char of text) {
       frequencies.set(char, (frequencies.get(char) || 0) + 1);
     }
-
-    console.log("Character Frequencies:", frequencies);
     return frequencies;
   }
 
-  createNodes(frequencies: Map<string, number>) {
-    const nodes: HuffmanNode[] = [];
-
-    frequencies.forEach((frequency, char) => {
-      nodes.push(new HuffmanNode(char, frequency));
-    });
-
-    console.log("Nodes Created:", nodes);
+  private createNodes(frequencies: Map<string, number>): HuffmanNode[] {
+    const nodes = Array.from(
+      frequencies,
+      ([char, frequency]) => new HuffmanNode(char, frequency)
+    );
     return nodes;
   }
 
-  buildHuffmanTree(nodes: HuffmanNode[]) {
+  private buildHuffmanTree(nodes: HuffmanNode[]): HuffmanNode | null {
     while (nodes.length > 1) {
-      // Sort nodes by frequency in ascending order
       nodes.sort((a, b) => a.frequency - b.frequency);
-
-      // Remove the two nodes with the smallest frequencies
-      const left = nodes.shift();
-      const right = nodes.shift();
-
-      if (left && right) {
-        // Create a new parent node with these two nodes as children
-        const parent = new HuffmanNode(null, left.frequency + right.frequency);
-        parent.left = left;
-        parent.right = right;
-
-        // Add the parent node back into the list of nodes
-        nodes.push(parent);
-      }
+      const left = nodes.shift()!;
+      const right = nodes.shift()!;
+      const parent = new HuffmanNode(
+        null,
+        left.frequency + right.frequency,
+        left,
+        right
+      );
+      nodes.push(parent);
     }
-
-    console.log("Final Nodes:", nodes);
-
-    // The remaining node is the root of the Huffman tree
-    return nodes[0];
+    return nodes[0] || null;
   }
 
-  generatePrefixCodes(node: HuffmanNode | null, prefix: string) {
+  private generatePrefixCodes(node: HuffmanNode | null, prefix: string) {
     if (node) {
       if (node.char) {
         this.prefixCodeTable.set(node.char, prefix);
@@ -88,24 +62,19 @@ export class HuffmanTree {
     }
   }
 
-  // Compress the encoded text
   getCompressedText(text: string): Uint8Array {
     const encodedText = this.encode(text);
-    const compressedText = this.getByteValues(encodedText); // No padding added
-    return compressedText;
+    return this.getByteValues(encodedText);
   }
 
-  // Encode the text using the Huffman tree
-  encode(text: string) {
-    const encodedText = text
+  private encode(text: string): string {
+    return text
       .split("")
       .map((char) => this.encodeChar(char))
       .join("");
-    return encodedText;
   }
 
-  // Encode a single character using the prefix code table
-  encodeChar(char: string): string {
+  private encodeChar(char: string): string {
     const code = this.prefixCodeTable.get(char);
     if (!code) {
       throw new Error(`Character ${char} not found in prefix code table`);
@@ -113,10 +82,8 @@ export class HuffmanTree {
     return code;
   }
 
-  // Convert the encoded text to bytes
-  getByteValues(encodedText: string): Uint8Array {
+  private getByteValues(encodedText: string): Uint8Array {
     const bytes = [];
-
     for (let i = 0; i < encodedText.length; i += 8) {
       const byte = encodedText.slice(i, i + 8);
       bytes.push(parseInt(byte, 2));
@@ -125,40 +92,23 @@ export class HuffmanTree {
   }
 
   decompress(compressedText: Uint8Array): string {
-    const bits = this.getBitValues(compressedText); // No padding involved
+    const bits = this.getBitValues(compressedText);
     return this.decodeBits(bits);
   }
 
   private getBitValues(compressedText: Uint8Array): string {
-    const bits = [];
-
-    for (const byte of compressedText) {
-      bits.push(byte.toString(2).padStart(8, "0"));
-    }
-
-    return bits.join("");
+    return Array.from(compressedText, (byte) =>
+      byte.toString(2).padStart(8, "0")
+    ).join("");
   }
 
   private decodeBits(bits: string): string {
     let decodedText = "";
     let current = this.root;
-
     for (const bit of bits) {
-      if (bit === "0") {
-        if (current?.left) {
-          current = current.left;
-        } else {
-          throw new Error("Invalid encoded text");
-        }
-      } else {
-        if (current?.right) {
-          current = current.right;
-        } else {
-          throw new Error("Invalid encoded text");
-        }
-      }
-
-      if (current?.char) {
+      current = bit === "0" ? current!.left : current!.right;
+      if (!current) throw new Error("Invalid encoded text");
+      if (current.char) {
         decodedText += current.char;
         current = this.root;
       }
@@ -166,12 +116,9 @@ export class HuffmanTree {
     return decodedText;
   }
 
-  // Serialize the Huffman tree to a string
   serialize(): string {
     const serializeNode = (node: HuffmanNode | null): string => {
-      if (!node) {
-        return "null"; // Use a dedicated null marker
-      }
+      if (!node) return "null";
       const char = node.char ? node.char.charCodeAt(0) : "#";
       return `${char},${node.frequency},${serializeNode(
         node.left
@@ -180,49 +127,30 @@ export class HuffmanTree {
     return serializeNode(this.root);
   }
 
-  // Deserialize a string to reconstruct the Huffman tree
   static deserialize(data: string): HuffmanTree {
     const deserializeNode = (nodes: string[]): HuffmanNode | null => {
-      if (!nodes.length) {
-        return null;
-      }
-
-      const char = nodes.shift(); // Get the character
-      if (char === "null") {
-        return null; // Handle null node
-      }
-
-      // Parse the frequency
+      if (!nodes.length) return null;
+      const char = nodes.shift();
+      if (char === "null") return null;
       const frequency = parseInt(nodes.shift()!, 10);
-      if (isNaN(frequency)) {
+      if (isNaN(frequency))
         throw new Error(`Invalid frequency value: ${frequency}`);
+      if (char === undefined) {
+        throw new Error("Invalid character value: undefined");
       }
-
-      console.log(
-        `Deserializing node with char: ${char}, frequency: ${frequency}`
-      );
-
-      // Create the new node
       const node = new HuffmanNode(
-        char === "#" ? null : String.fromCharCode(parseInt(char!, 10)), // Handle the character
+        char === "#" ? null : String.fromCharCode(parseInt(char, 10)),
         frequency
       );
-
-      // Recursively construct the left and right children
       node.left = deserializeNode(nodes);
       node.right = deserializeNode(nodes);
-
       return node;
     };
 
     const nodes = data.split(",");
-    console.log("Deserializing Nodes:", nodes);
-
     const tree = new HuffmanTree("", "");
     tree.root = deserializeNode(nodes);
-
     tree.generatePrefixCodes(tree.root, "");
-
     return tree;
   }
 }
