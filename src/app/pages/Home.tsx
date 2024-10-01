@@ -95,13 +95,39 @@ const HomePage = () => {
       <h1>Huffman Compression and Decompression</h1>
       <div className='section'>
         <h2>Compress</h2>
-        <input type='file' onChange={(e) => handleFileChange(e, true)} />
-        {fileName && <p>File: {fileName}</p>}
+        <div
+          className='file-upload-button'
+          onClick={() => document.getElementById("fileInputCompress")?.click()}
+        >
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'>
+            <path d='M0 64C0 28.7 28.7 0 64 0L224 0l0 128c0 17.7 14.3 32 32 32l128 0 0 288c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 64zm384 64l-128 0L256 0 384 128z' />
+          </svg>{" "}
+        </div>
+        <input
+          type='file'
+          id='fileInputCompress'
+          style={{ display: "none" }}
+          onChange={(e) => handleFileChange(e, true)}
+        />
       </div>
       <div className='section'>
         <h2>Decompress</h2>
-        <input type='file' onChange={(e) => handleFileChange(e, false)} />
-        {fileName && <p>File: {fileName}</p>}
+        <div
+          className='file-upload-button'
+          onClick={() =>
+            document.getElementById("fileInputDecompress")?.click()
+          }
+        >
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'>
+            <path d='M0 64C0 28.7 28.7 0 64 0L224 0l0 128c0 17.7 14.3 32 32 32l128 0 0 288c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 64zm384 64l-128 0L256 0 384 128z' />
+          </svg>{" "}
+        </div>
+        <input
+          type='file'
+          id='fileInputDecompress'
+          style={{ display: "none" }}
+          onChange={(e) => handleFileChange(e, false)}
+        />
       </div>
     </div>
   );
