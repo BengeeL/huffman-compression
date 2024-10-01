@@ -109,7 +109,7 @@ const HomePage = () => {
 
   return (
     <div className='container'>
-      <h1>Huffman Compression and Decompression</h1>
+      <h1>HMCompressor</h1>
       {renderFileUploadButton("fileInputCompress", true, "Compress")}
       {renderFileUploadButton("fileInputDecompress", false, "Decompress")}
     </div>
