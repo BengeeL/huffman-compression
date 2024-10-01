@@ -86,10 +86,12 @@ const HomePage = () => {
   const renderFileUploadButton = (
     id: string,
     isCompress: boolean,
-    label: string
+    label: string,
+    desc: string
   ) => (
     <div className='section'>
       <h2>{label}</h2>
+      <h3>{desc}</h3>
       <div
         className='file-upload-button'
         onClick={() => document.getElementById(id)?.click()}
@@ -110,8 +112,30 @@ const HomePage = () => {
   return (
     <div className='container'>
       <h1>HMCompressor</h1>
-      {renderFileUploadButton("fileInputCompress", true, "Compress")}
-      {renderFileUploadButton("fileInputDecompress", false, "Decompress")}
+      <div className='options'>
+        {renderFileUploadButton(
+          "fileInputCompress",
+          true,
+          "Compress",
+          'text file > ".hmc"'
+        )}
+        {renderFileUploadButton(
+          "fileInputDecompress",
+          false,
+          "Decompress",
+          '".hcm" > text file'
+        )}
+      </div>
+
+      <h2>Instructions</h2>
+      <p>
+        To compress a file, click the "Compress" button and select a text file.
+        The compressed file will be downloaded automatically.
+      </p>
+      <p>
+        To decompress a file, click the "Decompress" button and select a
+        compressed file. The decompressed file will be downloaded automatically.
+      </p>
     </div>
   );
 };
