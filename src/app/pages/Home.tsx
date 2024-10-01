@@ -117,24 +117,25 @@ const HomePage = () => {
           "fileInputCompress",
           true,
           "Compress",
-          "text file > '.hmc'"
+          "text file &gt; '.hmc'"
         )}
         {renderFileUploadButton(
           "fileInputDecompress",
           false,
           "Decompress",
-          "'.hcm' > text file"
+          "'.hcm' &gt; text file"
         )}
       </div>
 
       <h2>Instructions</h2>
       <p>
-        To compress a file, click the "Compress" button and select a text file.
-        The compressed file will be downloaded automatically.
+        To compress a file, click the &quot;Compress&quot; button and select a
+        text file. The compressed file will be downloaded automatically.
       </p>
       <p>
-        To decompress a file, click the "Decompress" button and select a
-        compressed file. The decompressed file will be downloaded automatically.
+        To decompress a file, click the &quot;Decompress&quot; button and select
+        a compressed file. The decompressed file will be downloaded
+        automatically.
       </p>
     </div>
   );
