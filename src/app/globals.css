@@ -25,3 +25,42 @@ body {
     text-wrap: balance;
   }
 }
+
+h1 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  text-align: left;
+}
+
+.container {
+  width: 80vw;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section {
+  background-color: #555;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+h2 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.file-upload-button {
+  margin: 10px 0;
+  appearance: none;
+  width: 40px;
+  cursor: pointer;
+}
+
+p {
+  color: white;
+  font-size: 14px;
+}
