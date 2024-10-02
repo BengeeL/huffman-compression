@@ -3,7 +3,7 @@ export function Footer() {
 
   return (
     <footer className='text-white text-center p-4'>
-      <p>&copy; {year} HMCompressor</p>
+      <p>&copy; {year} HMCompressor by Benjamin Lefebvre</p>
     </footer>
   );
 }
