@@ -117,13 +117,13 @@ const HomePage = () => {
           "fileInputCompress",
           true,
           "Compress",
-          "text file - '.hmc'"
+          "text file > '.hmc'"
         )}
         {renderFileUploadButton(
           "fileInputDecompress",
           false,
           "Decompress",
-          "'.hcm' - text file"
+          "'.hcm' > text file"
         )}
       </div>
 
