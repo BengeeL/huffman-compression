@@ -51,6 +51,13 @@ h1 {
   margin-bottom: 20px;
   text-align: left;
   width: 49%;
+  user-select: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.section:hover {
+  background-color: #777;
 }
 
 h2 {
@@ -63,7 +70,6 @@ h2 {
   margin: 10px 0;
   appearance: none;
   width: 40px;
-  cursor: pointer;
 }
 
 p {
